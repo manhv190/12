@@ -21,6 +21,27 @@ color:white;
 overflow-x:hidden;
 }
 
+/* dòng hướng dẫn chạm */
+
+#tapStart{
+position:fixed;
+top:10px;
+left:50%;
+transform:translateX(-50%);
+font-size:18px;
+color:white;
+opacity:0.85;
+letter-spacing:1px;
+animation:blink 1.5s infinite;
+z-index:999;
+}
+
+@keyframes blink{
+0%{opacity:0.2}
+50%{opacity:1}
+100%{opacity:0.2}
+}
+
 /* kim tuyến */
 
 .sparkle{
@@ -128,6 +149,8 @@ margin-bottom:5px;
 
 <body>
 
+<div id="tapStart">👆 Chạm vào màn hình để bắt đầu</div>
+
 <audio id="music" loop>
 <source src="thiep.MP3" type="audio/mpeg">
 </audio>
@@ -171,11 +194,19 @@ Cảm ơn mọi người đã đồng hành cùng hành trình này ✨
 let music=document.getElementById("music")
 
 function startMusic(){
+
 music.play().catch(()=>{})
+
+/* ẩn dòng hướng dẫn */
+
+let tap=document.getElementById("tapStart")
+if(tap) tap.style.display="none"
+
 }
 
 document.addEventListener("click",startMusic,{once:true})
 document.addEventListener("touchstart",startMusic,{once:true})
+document.addEventListener("scroll",startMusic,{once:true})
 
 /* scroll animation */
 
@@ -188,9 +219,7 @@ cards.forEach(card=>{
 let top=card.getBoundingClientRect().top
 
 if(top < window.innerHeight - 120){
-
 card.classList.add("show")
-
 }
 
 })
@@ -206,9 +235,7 @@ let sparkle=document.createElement("div")
 sparkle.className="sparkle"
 
 sparkle.style.left=Math.random()*100+"%"
-
 sparkle.style.opacity=Math.random()
-
 sparkle.style.animationDuration=(Math.random()*6+4)+"s"
 
 document.body.appendChild(sparkle)
