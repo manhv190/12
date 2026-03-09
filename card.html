@@ -8,7 +8,7 @@
 
 <style>
 
-{
+*{
 margin:0;
 padding:0;
 box-sizing:border-box;
@@ -21,13 +21,12 @@ color:white;
 overflow-x:hidden;
 }
 
-/ tuyết /
+/* tuyết */
 
 .snow{
 position:fixed;
 top:-10px;
 color:white;
-font-size:10px;
 pointer-events:none;
 animation:fall linear infinite;
 }
@@ -36,7 +35,7 @@ animation:fall linear infinite;
 to{transform:translateY(110vh);}
 }
 
-/ khu vực ảnh /
+/* khu vực ảnh */
 
 .section{
 max-width:900px;
@@ -62,105 +61,6 @@ border-radius:16px;
 box-shadow:0 15px 40px rgba(0,0,0,0.6);
 }
 
-/ tiêu đề /
-
-.wish-title{
-text-align:center;
-font-size:30px;
-margin-top:70px;
-margin-bottom:25px;
-}
-
-/ khung lời chúc /
-
-.wish-box{
-
-background:rgba(255,255,255,0.08);
-
-border-radius:20px;
-
-padding:30px;
-
-backdrop-filter:blur(12px);
-
-box-shadow:0 0 25px rgba(120,180,255,0.3);
-
-}
-
-/ input /
-
-.wish-box input,
-.wish-box textarea{
-
-width:100%;
-
-padding:12px;
-
-margin:10px 0;
-
-border-radius:10px;
-
-border:none;
-
-outline:none;
-
-}
-
-.wish-box textarea{
-height:90px;
-resize:none;
-}
-
-/ nút /
-
-.wish-box button{
-
-padding:12px 35px;
-
-border:none;
-
-border-radius:30px;
-
-background:linear-gradient(45deg,#4f46e5,#3b82f6);
-
-color:white;
-
-cursor:pointer;
-
-margin-top:10px;
-
-font-size:16px;
-
-}
-
-/ danh sách /
-
-.wish-list{
-margin-top:30px;
-}
-
-.wish-item{
-
-background:rgba(255,255,255,0.12);
-
-padding:15px;
-
-border-radius:15px;
-
-margin-top:15px;
-
-line-height:1.5;
-
-box-shadow:0 0 10px rgba(255,255,255,0.1);
-
-}
-
-.wish-name{
-font-weight:bold;
-color:#93c5fd;
-margin-bottom:5px;
-}
-
 .end{
 text-align:center;
 margin-top:80px;
@@ -173,8 +73,8 @@ opacity:0.9;
 
 <body>
 
-<audio id="music" autoplay loop preload="auto">
-<source src="thiep.MP3" type="audio/mpeg">
+<audio id="music" loop>
+<source src="thiep.mp3" type="audio/mpeg">
 </audio>
 
 <div class="section">
@@ -193,38 +93,22 @@ opacity:0.9;
 Cảm ơn mọi người đã đồng hành cùng hành trình này ✨
 </div>
 
-<div class="wish-title">
-💌 Gửi lời chúc của bạn
-</div>
-
-<div class="wish-box">
-
-<input id="name" placeholder="Tên của bạn">
-
-<textarea id="wish" placeholder="Viết lời chúc của bạn..."></textarea>
-
-<button onclick="addWish()">Gửi lời chúc</button>
-
-<div class="wish-list" id="wishList"></div>
-
-</div>
-
 </div>
 
 <script>
 
-/ bật nhạc khi chạm màn hình (fix mobile) /
+/* bật nhạc khi chạm màn hình */
 
-const music=document.getElementById("music")
+let music=document.getElementById("music")
 
 function startMusic(){
 music.play().catch(()=>{})
 }
 
-document.addEventListener("touchstart",startMusic,{once:true})
 document.addEventListener("click",startMusic,{once:true})
+document.addEventListener("touchstart",startMusic,{once:true})
 
-/ hiệu ứng ảnh khi cuộn /
+/* hiệu ứng ảnh khi cuộn */
 
 const cards=document.querySelectorAll(".card")
 
@@ -235,16 +119,14 @@ cards.forEach(card=>{
 let top=card.getBoundingClientRect().top
 
 if(top<window.innerHeight-100){
-
 card.classList.add("show")
-
 }
 
 })
 
 })
 
-/ tuyết */
+/* tuyết */
 
 for(let i=0;i<60;i++){
 
@@ -255,54 +137,11 @@ snow.className="snow"
 snow.innerHTML="❄"
 
 snow.style.left=Math.random()*100+"%"
-
 snow.style.animationDuration=(Math.random()*5+5)+"s"
-
 snow.style.opacity=Math.random()
-
-snow.style.fontSize=(Math.random()10+10)+"px"
+snow.style.fontSize=(Math.random()*10+10)+"px"
 
 document.body.appendChild(snow)
-
-}
-
-/ lưu lời chúc */
-
-let wishList=document.getElementById("wishList")
-
-let saved=JSON.parse(localStorage.getItem("wishes"))||[]
-
-saved.forEach(w=>{
-createWish(w.name,w.text)
-})
-
-function addWish(){
-
-let name=document.getElementById("name").value
-let wish=document.getElementById("wish").value
-
-if(name==""||wish=="") return
-
-createWish(name,wish)
-
-saved.push({name:name,text:wish})
-
-localStorage.setItem("wishes",JSON.stringify(saved))
-
-document.getElementById("name").value=""
-document.getElementById("wish").value=""
-
-}
-
-function createWish(name,text){
-
-let box=document.createElement("div")
-
-box.className="wish-item"
-
-box.innerHTML="<div class='wish-name'>"+name+"</div>"+text
-
-wishList.appendChild(box)
 
 }
 
@@ -310,4 +149,3 @@ wishList.appendChild(box)
 
 </body>
 </html>
-
