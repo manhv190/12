@@ -26,7 +26,6 @@ overflow-x:hidden;
 .snow{
 position:fixed;
 top:-10px;
-color:white;
 pointer-events:none;
 animation:fall linear infinite;
 }
@@ -45,14 +44,6 @@ padding:60px 20px;
 
 .card{
 margin-bottom:25px;
-opacity:0;
-transform:translateY(60px);
-transition:1s;
-}
-
-.card.show{
-opacity:1;
-transform:translateY(0);
 }
 
 .card img{
@@ -61,11 +52,61 @@ border-radius:16px;
 box-shadow:0 15px 40px rgba(0,0,0,0.6);
 }
 
+/* lời kết */
+
 .end{
 text-align:center;
 margin-top:80px;
 font-size:22px;
 opacity:0.9;
+}
+
+/* khung lời chúc */
+
+.wish-box{
+margin-top:40px;
+background:rgba(255,255,255,0.08);
+border-radius:20px;
+padding:25px;
+backdrop-filter:blur(10px);
+}
+
+.wish-box input,
+.wish-box textarea{
+width:100%;
+padding:10px;
+margin-top:10px;
+border-radius:10px;
+border:none;
+outline:none;
+}
+
+.wish-box textarea{
+height:90px;
+resize:none;
+}
+
+.wish-box button{
+margin-top:10px;
+padding:10px 25px;
+border:none;
+border-radius:20px;
+background:#3b82f6;
+color:white;
+cursor:pointer;
+}
+
+.wish-item{
+margin-top:15px;
+background:rgba(255,255,255,0.12);
+padding:12px;
+border-radius:12px;
+}
+
+.wish-name{
+font-weight:bold;
+color:#93c5fd;
+margin-bottom:5px;
 }
 
 </style>
@@ -74,7 +115,7 @@ opacity:0.9;
 <body>
 
 <audio id="music" loop>
-<source src="thiep.mp3" type="audio/mpeg">
+<source src="thiep.MP3" type="audio/mpeg">
 </audio>
 
 <div class="section">
@@ -93,55 +134,73 @@ opacity:0.9;
 Cảm ơn mọi người đã đồng hành cùng hành trình này ✨
 </div>
 
+<div class="wish-box">
+
+<h3>💌 Gửi lời chúc của bạn</h3>
+
+<input id="name" placeholder="Tên của bạn">
+
+<textarea id="wish" placeholder="Viết lời chúc của bạn..."></textarea>
+
+<button onclick="addWish()">Gửi lời chúc</button>
+
+<div id="wishList"></div>
+
+</div>
+
 </div>
 
 <script>
 
-/* bật nhạc khi chạm màn hình */
+/* bật nhạc khi chạm */
 
 let music=document.getElementById("music")
 
-function startMusic(){
+document.addEventListener("click",()=>{
 music.play().catch(()=>{})
-}
+},{once:true})
 
-document.addEventListener("click",startMusic,{once:true})
-document.addEventListener("touchstart",startMusic,{once:true})
-
-/* hiệu ứng ảnh khi cuộn */
-
-const cards=document.querySelectorAll(".card")
-
-window.addEventListener("scroll",()=>{
-
-cards.forEach(card=>{
-
-let top=card.getBoundingClientRect().top
-
-if(top<window.innerHeight-100){
-card.classList.add("show")
-}
-
-})
-
-})
+document.addEventListener("touchstart",()=>{
+music.play().catch(()=>{})
+},{once:true})
 
 /* tuyết */
 
-for(let i=0;i<60;i++){
+for(let i=0;i<50;i++){
 
 let snow=document.createElement("div")
 
 snow.className="snow"
-
 snow.innerHTML="❄"
 
 snow.style.left=Math.random()*100+"%"
-snow.style.animationDuration=(Math.random()*5+5)+"s"
+snow.style.fontSize=(Math.random()*12+10)+"px"
 snow.style.opacity=Math.random()
-snow.style.fontSize=(Math.random()*10+10)+"px"
+snow.style.animationDuration=(Math.random()*5+5)+"s"
 
 document.body.appendChild(snow)
+
+}
+
+/* gửi lời chúc */
+
+function addWish(){
+
+let name=document.getElementById("name").value
+let wish=document.getElementById("wish").value
+
+if(name==""||wish=="") return
+
+let box=document.createElement("div")
+
+box.className="wish-item"
+
+box.innerHTML="<div class='wish-name'>"+name+"</div>"+wish
+
+document.getElementById("wishList").appendChild(box)
+
+document.getElementById("name").value=""
+document.getElementById("wish").value=""
 
 }
 
