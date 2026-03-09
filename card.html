@@ -156,13 +156,14 @@ Cảm ơn mọi người đã đồng hành cùng hành trình này ✨
 
 let music=document.getElementById("music")
 
-document.addEventListener("click",()=>{
-music.play().catch(()=>{})
-},{once:true})
+let music=document.getElementById("music")
 
-document.addEventListener("touchstart",()=>{
+function startMusic(){
 music.play().catch(()=>{})
-},{once:true})
+window.removeEventListener("scroll",startMusic)
+}
+
+window.addEventListener("scroll",startMusic)
 
 /* tuyết */
 
@@ -208,3 +209,4 @@ document.getElementById("wish").value=""
 
 </body>
 </html>
+
