@@ -21,70 +21,25 @@ color:white;
 overflow-x:hidden;
 }
 
-/* ===== TAP START UI ===== */
+/* chữ bắt đầu */
 
-#tapStart{
-
+.start-text{
 position:fixed;
-top:20px;
+top:40%;
 left:50%;
-transform:translateX(-50%);
-
-font-size:26px;
-font-weight:bold;
-
-padding:12px 22px;
-
-border-radius:18px;
-
-background:rgba(0,0,0,0.45);
-backdrop-filter:blur(10px);
-
-text-align:center;
-
-box-shadow:
-0 0 15px rgba(255,255,255,0.2),
-0 0 35px rgba(120,180,255,0.4);
-
-animation:pulse 2s infinite;
-
-z-index:999;
-
-}
-
-.tap-arrow{
-
-display:block;
-
+transform:translate(-50%,-50%);
 font-size:28px;
-
-margin-top:5px;
-
-animation:arrowMove 1.2s infinite;
-
+text-align:center;
+animation:blink 1.2s infinite;
+z-index:10;
 }
 
-@keyframes pulse{
-
-0%{transform:translateX(-50%) scale(1);opacity:0.8}
-
-50%{transform:translateX(-50%) scale(1.06);opacity:1}
-
-100%{transform:translateX(-50%) scale(1);opacity:0.8}
-
+@keyframes blink{
+0%,100%{opacity:1}
+50%{opacity:0.3}
 }
 
-@keyframes arrowMove{
-
-0%{transform:translateY(0)}
-
-50%{transform:translateY(6px)}
-
-100%{transform:translateY(0)}
-
-}
-
-/* ===== KIM TUYẾN ===== */
+/* kim tuyến */
 
 .sparkle{
 position:fixed;
@@ -101,15 +56,11 @@ animation:fall linear infinite;
 to{transform:translateY(110vh);}
 }
 
-/* ===== SECTION ===== */
-
 .section{
 max-width:900px;
 margin:auto;
 padding:60px 20px;
 }
-
-/* ===== CARD ANIMATION ===== */
 
 .card{
 margin-bottom:35px;
@@ -129,8 +80,6 @@ border-radius:16px;
 box-shadow:0 15px 40px rgba(0,0,0,0.6);
 }
 
-/* ===== END TEXT ===== */
-
 .end{
 text-align:center;
 margin-top:80px;
@@ -138,7 +87,7 @@ font-size:22px;
 opacity:0.9;
 }
 
-/* ===== WISH BOX ===== */
+/* lời chúc */
 
 .wish-box{
 margin-top:40px;
@@ -146,6 +95,14 @@ background:rgba(255,255,255,0.08);
 border-radius:20px;
 padding:25px;
 backdrop-filter:blur(10px);
+opacity:0;
+transform:translateY(80px);
+transition:1s;
+}
+
+.wish-box.show{
+opacity:1;
+transform:translateY(0);
 }
 
 .wish-box input,
@@ -173,17 +130,52 @@ color:white;
 cursor:pointer;
 }
 
+/* lời chúc item */
+
 .wish-item{
 margin-top:15px;
-background:rgba(255,255,255,0.12);
-padding:12px;
-border-radius:12px;
+background:linear-gradient(145deg,#1e293b,#0f172a);
+padding:14px;
+border-radius:14px;
+box-shadow:0 8px 20px rgba(0,0,0,0.4);
+animation:pop 0.5s ease;
+}
+
+@keyframes pop{
+0%{transform:scale(0.8);opacity:0}
+100%{transform:scale(1);opacity:1}
 }
 
 .wish-name{
 font-weight:bold;
 color:#93c5fd;
-margin-bottom:5px;
+margin-bottom:4px;
+}
+
+.wish-time{
+font-size:12px;
+opacity:0.6;
+margin-top:4px;
+}
+
+/* tim bay */
+
+.heart{
+position:fixed;
+font-size:20px;
+animation:heartFly 2s linear forwards;
+pointer-events:none;
+}
+
+@keyframes heartFly{
+0%{
+transform:translateY(0) scale(1);
+opacity:1;
+}
+100%{
+transform:translateY(-200px) scale(1.5);
+opacity:0;
+}
 }
 
 </style>
@@ -191,11 +183,8 @@ margin-bottom:5px;
 
 <body>
 
-<!-- TAP START -->
-
-<div id="tapStart">
-👆 Chạm vào và cuộn lên để bắt đầu
-<span class="tap-arrow">⬆</span>
+<div class="start-text" id="startText">
+✨ Chạm và cuộn lên để bắt đầu ✨
 </div>
 
 <audio id="music" loop>
@@ -218,7 +207,7 @@ margin-bottom:5px;
 Cảm ơn mọi người đã đồng hành cùng hành trình này ✨
 </div>
 
-<div class="wish-box">
+<div class="wish-box" id="wishBox">
 
 <h3>💌 Gửi lời chúc của bạn</h3>
 
@@ -234,28 +223,66 @@ Cảm ơn mọi người đã đồng hành cùng hành trình này ✨
 
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
 <script>
 
-/* AUDIO */
+/* FIREBASE */
+
+const firebaseConfig = {
+apiKey: "AIzaSyBYWyqiI5K_IMWJc3uJ_hZugIAIKWwF2E0",
+authDomain: "thiep-8ae3a.firebaseapp.com",
+databaseURL: "https://thiep-8ae3a-default-rtdb.firebaseio.com",
+projectId: "thiep-8ae3a",
+storageBucket: "thiep-8ae3a.firebasestorage.app",
+messagingSenderId: "637605649024",
+appId: "1:637605649024:web:a8c2387aefae7c54e5a465"
+}
+
+firebase.initializeApp(firebaseConfig)
+
+const db = firebase.database()
+
+/* nhạc */
 
 let music=document.getElementById("music")
 
 function startMusic(){
-
 music.play().catch(()=>{})
-
-let tap=document.getElementById("tapStart")
-if(tap) tap.style.display="none"
-
+document.getElementById("startText").style.display="none"
+startSparkle()
 }
 
 document.addEventListener("click",startMusic,{once:true})
 document.addEventListener("touchstart",startMusic,{once:true})
-document.addEventListener("scroll",startMusic,{once:true})
 
-/* SCROLL ANIMATION */
+/* kim tuyến */
+
+function startSparkle(){
+
+for(let i=0;i<80;i++){
+
+let sparkle=document.createElement("div")
+
+sparkle.className="sparkle"
+
+sparkle.style.left=Math.random()*100+"%"
+
+sparkle.style.opacity=Math.random()
+
+sparkle.style.animationDuration=(Math.random()*6+4)+"s"
+
+document.body.appendChild(sparkle)
+
+}
+
+}
+
+/* scroll animation */
 
 const cards=document.querySelectorAll(".card")
+let wishBox=document.getElementById("wishBox")
 
 window.addEventListener("scroll",()=>{
 
@@ -269,63 +296,89 @@ card.classList.add("show")
 
 })
 
-})
+let boxTop=wishBox.getBoundingClientRect().top
 
-/* KIM TUYẾN */
-
-for(let i=0;i<90;i++){
-
-let sparkle=document.createElement("div")
-
-sparkle.className="sparkle"
-
-sparkle.style.left=Math.random()*100+"%"
-sparkle.style.opacity=Math.random()
-sparkle.style.animationDuration=(Math.random()*6+4)+"s"
-
-document.body.appendChild(sparkle)
-
+if(boxTop < window.innerHeight - 100){
+wishBox.classList.add("show")
 }
 
-/* LOAD WISH */
+})
+
+/* realtime lời chúc */
 
 let wishList=document.getElementById("wishList")
 
-let saved=JSON.parse(localStorage.getItem("wishes") || "[]")
+db.ref("wishes").on("child_added",(data)=>{
 
-saved.forEach(w=>{
-createWish(w.name,w.text)
+let w=data.val()
+
+createWish(w.name,w.text,w.time)
+
 })
-
-/* ADD WISH */
 
 function addWish(){
 
-let name=document.getElementById("name").value
-let wish=document.getElementById("wish").value
+let name=document.getElementById("name").value.trim()
+let wish=document.getElementById("wish").value.trim()
 
-if(name==""||wish=="") return
+if(name==""||wish==""){
+alert("Viết tên và lời chúc nhé ✨")
+return
+}
 
-createWish(name,wish)
+db.ref("wishes").push({
+name:name,
+text:wish,
+time:Date.now()
+})
 
-saved.push({name:name,text:wish})
-
-localStorage.setItem("wishes",JSON.stringify(saved))
+spawnHearts()
 
 document.getElementById("name").value=""
 document.getElementById("wish").value=""
 
 }
 
-function createWish(name,text){
+function createWish(name,text,time){
 
 let box=document.createElement("div")
 
 box.className="wish-item"
 
-box.innerHTML="<div class='wish-name'>"+name+"</div>"+text
+let date=new Date(time||Date.now())
 
-wishList.appendChild(box)
+let t=date.getHours()+":"+String(date.getMinutes()).padStart(2,"0")
+
+box.innerHTML=
+"<div class='wish-name'>"+name+"</div>"+
+"<div>"+text+"</div>"+
+"<div class='wish-time'>🕒 "+t+"</div>"
+
+wishList.prepend(box)
+
+}
+
+/* tim bay */
+
+function spawnHearts(){
+
+for(let i=0;i<10;i++){
+
+let heart=document.createElement("div")
+
+heart.className="heart"
+
+heart.innerHTML="❤️"
+
+heart.style.left=Math.random()*100+"%"
+
+heart.style.bottom="0"
+
+document.body.appendChild(heart)
+
+setTimeout(()=>heart.remove(),2000)
+
+}
 
 }
 
