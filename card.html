@@ -2,11 +2,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Thiệp kỷ niệm</title>
 
 <style>
 
-*{
+{
 margin:0;
 padding:0;
 box-sizing:border-box;
@@ -19,7 +21,7 @@ color:white;
 overflow-x:hidden;
 }
 
-/* tuyết */
+/ tuyết /
 
 .snow{
 position:fixed;
@@ -34,18 +36,18 @@ animation:fall linear infinite;
 to{transform:translateY(110vh);}
 }
 
-/* khu vực ảnh */
+/ khu vực ảnh /
 
 .section{
-max-width:1100px;
+max-width:900px;
 margin:auto;
-padding:80px 20px;
+padding:60px 20px;
 }
 
 .card{
-margin-bottom:35px;   /* ảnh gần nhau hơn */
+margin-bottom:25px;
 opacity:0;
-transform:translateY(80px);
+transform:translateY(60px);
 transition:1s;
 }
 
@@ -56,20 +58,20 @@ transform:translateY(0);
 
 .card img{
 width:100%;
-border-radius:18px;
+border-radius:16px;
 box-shadow:0 15px 40px rgba(0,0,0,0.6);
 }
 
-/* tiêu đề lời chúc */
+/ tiêu đề /
 
 .wish-title{
 text-align:center;
-font-size:34px;
-margin-top:80px;
-margin-bottom:30px;
+font-size:30px;
+margin-top:70px;
+margin-bottom:25px;
 }
 
-/* khung lời chúc */
+/ khung lời chúc /
 
 .wish-box{
 
@@ -77,15 +79,15 @@ background:rgba(255,255,255,0.08);
 
 border-radius:20px;
 
-padding:35px;
+padding:30px;
 
 backdrop-filter:blur(12px);
 
-box-shadow:0 0 30px rgba(120,180,255,0.3);
+box-shadow:0 0 25px rgba(120,180,255,0.3);
 
 }
 
-/* input */
+/ input /
 
 .wish-box input,
 .wish-box textarea{
@@ -109,7 +111,7 @@ height:90px;
 resize:none;
 }
 
-/* nút gửi */
+/ nút /
 
 .wish-box button{
 
@@ -131,13 +133,11 @@ font-size:16px;
 
 }
 
-/* danh sách lời chúc */
+/ danh sách /
 
 .wish-list{
 margin-top:30px;
 }
-
-/* từng lời chúc */
 
 .wish-item{
 
@@ -164,7 +164,7 @@ margin-bottom:5px;
 .end{
 text-align:center;
 margin-top:80px;
-font-size:24px;
+font-size:22px;
 opacity:0.9;
 }
 
@@ -173,8 +173,8 @@ opacity:0.9;
 
 <body>
 
-<audio autoplay loop>
-<source src="thiep.MP3" type="audio/mpeg">
+<audio id="music" autoplay loop preload="auto">
+<source src="thiep.mp3" type="audio/mpeg">
 </audio>
 
 <div class="section">
@@ -213,7 +213,18 @@ Cảm ơn mọi người đã đồng hành cùng hành trình này ✨
 
 <script>
 
-/* hiệu ứng ảnh khi cuộn */
+/ bật nhạc khi chạm màn hình (fix mobile) /
+
+const music=document.getElementById("music")
+
+function startMusic(){
+music.play().catch(()=>{})
+}
+
+document.addEventListener("touchstart",startMusic,{once:true})
+document.addEventListener("click",startMusic,{once:true})
+
+/ hiệu ứng ảnh khi cuộn /
 
 const cards=document.querySelectorAll(".card")
 
@@ -223,7 +234,7 @@ cards.forEach(card=>{
 
 let top=card.getBoundingClientRect().top
 
-if(top<window.innerHeight-120){
+if(top<window.innerHeight-100){
 
 card.classList.add("show")
 
@@ -233,7 +244,7 @@ card.classList.add("show")
 
 })
 
-/* tạo tuyết */
+/ tuyết */
 
 for(let i=0;i<60;i++){
 
@@ -249,32 +260,49 @@ snow.style.animationDuration=(Math.random()*5+5)+"s"
 
 snow.style.opacity=Math.random()
 
-snow.style.fontSize=(Math.random()*10+10)+"px"
+snow.style.fontSize=(Math.random()10+10)+"px"
 
 document.body.appendChild(snow)
 
 }
 
-/* gửi lời chúc */
+/ lưu lời chúc */
+
+let wishList=document.getElementById("wishList")
+
+let saved=JSON.parse(localStorage.getItem("wishes"))||[]
+
+saved.forEach(w=>{
+createWish(w.name,w.text)
+})
 
 function addWish(){
 
 let name=document.getElementById("name").value
-
 let wish=document.getElementById("wish").value
 
-if(name=="" || wish=="") return
+if(name==""||wish=="") return
+
+createWish(name,wish)
+
+saved.push({name:name,text:wish})
+
+localStorage.setItem("wishes",JSON.stringify(saved))
+
+document.getElementById("name").value=""
+document.getElementById("wish").value=""
+
+}
+
+function createWish(name,text){
 
 let box=document.createElement("div")
 
 box.className="wish-item"
 
-box.innerHTML="<div class='wish-name'>"+name+"</div>"+wish
+box.innerHTML="<div class='wish-name'>"+name+"</div>"+text
 
-document.getElementById("wishList").appendChild(box)
-
-document.getElementById("name").value=""
-document.getElementById("wish").value=""
+wishList.appendChild(box)
 
 }
 
