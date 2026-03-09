@@ -21,28 +21,70 @@ color:white;
 overflow-x:hidden;
 }
 
-/* dòng hướng dẫn chạm */
+/* ===== TAP START UI ===== */
 
 #tapStart{
+
 position:fixed;
-top:10px;
+top:20px;
 left:50%;
 transform:translateX(-50%);
-font-size:18px;
-color:white;
-opacity:0.85;
-letter-spacing:1px;
-animation:blink 1.5s infinite;
+
+font-size:26px;
+font-weight:bold;
+
+padding:12px 22px;
+
+border-radius:18px;
+
+background:rgba(0,0,0,0.45);
+backdrop-filter:blur(10px);
+
+text-align:center;
+
+box-shadow:
+0 0 15px rgba(255,255,255,0.2),
+0 0 35px rgba(120,180,255,0.4);
+
+animation:pulse 2s infinite;
+
 z-index:999;
+
 }
 
-@keyframes blink{
-0%{opacity:0.2}
-50%{opacity:1}
-100%{opacity:0.2}
+.tap-arrow{
+
+display:block;
+
+font-size:28px;
+
+margin-top:5px;
+
+animation:arrowMove 1.2s infinite;
+
 }
 
-/* kim tuyến */
+@keyframes pulse{
+
+0%{transform:translateX(-50%) scale(1);opacity:0.8}
+
+50%{transform:translateX(-50%) scale(1.06);opacity:1}
+
+100%{transform:translateX(-50%) scale(1);opacity:0.8}
+
+}
+
+@keyframes arrowMove{
+
+0%{transform:translateY(0)}
+
+50%{transform:translateY(6px)}
+
+100%{transform:translateY(0)}
+
+}
+
+/* ===== KIM TUYẾN ===== */
 
 .sparkle{
 position:fixed;
@@ -59,7 +101,7 @@ animation:fall linear infinite;
 to{transform:translateY(110vh);}
 }
 
-/* khu vực ảnh */
+/* ===== SECTION ===== */
 
 .section{
 max-width:900px;
@@ -67,7 +109,7 @@ margin:auto;
 padding:60px 20px;
 }
 
-/* card animation */
+/* ===== CARD ANIMATION ===== */
 
 .card{
 margin-bottom:35px;
@@ -87,7 +129,7 @@ border-radius:16px;
 box-shadow:0 15px 40px rgba(0,0,0,0.6);
 }
 
-/* lời kết */
+/* ===== END TEXT ===== */
 
 .end{
 text-align:center;
@@ -96,7 +138,7 @@ font-size:22px;
 opacity:0.9;
 }
 
-/* khung lời chúc */
+/* ===== WISH BOX ===== */
 
 .wish-box{
 margin-top:40px;
@@ -149,7 +191,12 @@ margin-bottom:5px;
 
 <body>
 
-<div id="tapStart">👆 Chạm vào màn hình để bắt đầu</div>
+<!-- TAP START -->
+
+<div id="tapStart">
+👆 Chạm vào và cuộn lên để bắt đầu
+<span class="tap-arrow">⬆</span>
+</div>
 
 <audio id="music" loop>
 <source src="thiep.MP3" type="audio/mpeg">
@@ -189,15 +236,13 @@ Cảm ơn mọi người đã đồng hành cùng hành trình này ✨
 
 <script>
 
-/* audio */
+/* AUDIO */
 
 let music=document.getElementById("music")
 
 function startMusic(){
 
 music.play().catch(()=>{})
-
-/* ẩn dòng hướng dẫn */
 
 let tap=document.getElementById("tapStart")
 if(tap) tap.style.display="none"
@@ -208,7 +253,7 @@ document.addEventListener("click",startMusic,{once:true})
 document.addEventListener("touchstart",startMusic,{once:true})
 document.addEventListener("scroll",startMusic,{once:true})
 
-/* scroll animation */
+/* SCROLL ANIMATION */
 
 const cards=document.querySelectorAll(".card")
 
@@ -226,9 +271,9 @@ card.classList.add("show")
 
 })
 
-/* kim tuyến */
+/* KIM TUYẾN */
 
-for(let i=0;i<80;i++){
+for(let i=0;i<90;i++){
 
 let sparkle=document.createElement("div")
 
@@ -242,7 +287,7 @@ document.body.appendChild(sparkle)
 
 }
 
-/* load lời chúc */
+/* LOAD WISH */
 
 let wishList=document.getElementById("wishList")
 
@@ -252,7 +297,7 @@ saved.forEach(w=>{
 createWish(w.name,w.text)
 })
 
-/* gửi lời chúc */
+/* ADD WISH */
 
 function addWish(){
 
