@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html>
 <head>
 <meta charset="UTF-8">
@@ -31,11 +30,8 @@ overflow:hidden;
 .open-btn{
 
 position:absolute;
-
 bottom:10%;
-
 left:50%;
-
 transform:translateX(-50%);
 
 padding:16px 50px;
@@ -63,8 +59,6 @@ box-shadow:
 animation:glow 2s infinite;
 
 }
-
-/* hiệu ứng phát sáng */
 
 @keyframes glow{
 
@@ -95,7 +89,6 @@ box-shadow:
 position:absolute;
 
 width:3px;
-
 height:3px;
 
 background:white;
@@ -109,49 +102,21 @@ animation:twinkle 2s infinite alternate;
 @keyframes twinkle{
 
 from{opacity:0.2}
-
 to{opacity:1}
 
 }
 
-/* mobile */
-
-@media (max-width:600px){
-
-.open-btn{
-font-size:18px;
-padding:14px 40px;
-bottom:8%;
-}
-
-}
-
 </style>
-
 </head>
 
 <body>
-
-<!-- nhạc -->
-
-<audio id="music" loop>
-<source src="thiep.MP3" type="audio/mpeg">
-</audio>
 
 <button class="open-btn" onclick="openCard()">OPEN</button>
 
 <script>
 
 function openCard(){
-
-let music=document.getElementById("music")
-
-music.play()
-
-setTimeout(()=>{
 window.location.href="card.html"
-},300)
-
 }
 
 /* tạo sao */
@@ -175,4 +140,3 @@ document.body.appendChild(star)
 
 </body>
 </html>
-
